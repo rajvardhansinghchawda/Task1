@@ -1,34 +1,394 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Verify OTP - Hospital HMS</title>
+    <title>Verify OTP · Hospital HMS</title>
+    <!-- Font & Icons (pure UI, no backend effect) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #f3f4f6; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 2rem 0;}
-        .container { background-color: white; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); width: 100%; max-width: 400px; }
-        h2 { text-align: center; color: #1f2937; margin-bottom: 0.5rem; }
-        p.subtitle { text-align: center; color: #6b7280; font-size: 0.875rem; margin-bottom: 1.5rem; }
-        .form-group { margin-bottom: 1rem; }
-        .form-group label { display: block; margin-bottom: 0.5rem; color: #4b5563; }
-        .form-group input { width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 4px; box-sizing: border-box; text-align: center; font-size: 1.25rem; letter-spacing: 2px;}
-        button { width: 100%; padding: 0.75rem; background-color: #10b981; color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; transition: background-color 0.2s; }
-        button:hover { background-color: #059669; }
-        .errorlist { color: #ef4444; font-size: 0.875rem; padding-left: 1rem; margin-top: 0.5rem;}
-        .links { margin-top: 1rem; text-align: center; font-size: 0.875rem;}
-        .links a { color: #10b981; text-decoration: none; }
-        .links a:hover { text-decoration: underline; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(145deg, #ecfdf3 0%, #f1faf5 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            margin: 0;
+            animation: bgPulse 10s ease infinite alternate;
+        }
+
+        @keyframes bgPulse {
+            0% {
+                background: linear-gradient(145deg, #e3f9ed, #edfdf5);
+            }
+
+            100% {
+                background: linear-gradient(225deg, #d4f2e3, #f0fcf4);
+            }
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 25px 45px -12px rgba(16, 185, 129, 0.25), 0 0 0 1px rgba(16, 185, 129, 0.1) inset;
+            padding: 2.5rem 2rem;
+            border-radius: 36px;
+            width: 100%;
+            max-width: 440px;
+            transition: transform 0.3s ease, box-shadow 0.4s ease;
+        }
+
+        .container:hover {
+            box-shadow: 0 30px 55px -15px rgba(16, 185, 129, 0.35), 0 0 0 1px rgba(16, 185, 129, 0.2) inset;
+            transform: translateY(-3px);
+        }
+
+        h2 {
+            text-align: center;
+            font-weight: 600;
+            font-size: 2rem;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, #0b4f3a, #1e8b6e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.4rem;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #2c5e4a;
+            font-size: 0.95rem;
+            margin-bottom: 2rem;
+            background: rgba(209, 250, 229, 0.5);
+            padding: 0.6rem 1rem;
+            border-radius: 40px;
+            backdrop-filter: blur(2px);
+            display: inline-block;
+            width: auto;
+            margin-left: auto;
+            margin-right: auto;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .subtitle i {
+            margin-right: 6px;
+            color: #10b981;
+        }
+
+        /* messages */
+        .messages-container {
+            margin-bottom: 1.8rem;
+        }
+
+        .message-item {
+            padding: 0.9rem 1.2rem;
+            border-radius: 24px;
+            margin-bottom: 0.75rem;
+            background: rgba(236, 253, 245, 0.7);
+            backdrop-filter: blur(4px);
+            border-left: 5px solid #10b981;
+            color: #0c4e3a;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            box-shadow: 0 6px 14px rgba(0, 65, 40, 0.1);
+            animation: slideFade 0.3s ease-out;
+        }
+
+        .message-item i {
+            color: #10b981;
+            font-size: 1.2rem;
+        }
+
+        @keyframes slideFade {
+            from {
+                opacity: 0;
+                transform: translateX(-8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* form group */
+        .form-group {
+            margin-bottom: 2rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.6rem;
+            color: #1f3a2f;
+            font-weight: 500;
+            font-size: 0.95rem;
+            letter-spacing: 0.3px;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-wrapper input {
+            width: 100%;
+            padding: 1rem 1.5rem 1rem 3.2rem;
+            /* left space for icon, text centered */
+            border: 2px solid #e2e8f0;
+            border-radius: 50px;
+            font-size: 1.4rem;
+            letter-spacing: 6px;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(4px);
+            transition: all 0.25s ease;
+            outline: none;
+            color: #1e3a2f;
+            font-weight: 600;
+            font-family: 'Inter', monospace;
+        }
+
+        .input-wrapper input:focus {
+            border-color: #10b981;
+            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.2);
+            background: white;
+        }
+
+        .input-wrapper input.is-valid {
+            border-color: #10b981;
+            background: #f0fdf9;
+        }
+
+        .input-wrapper input.is-invalid {
+            border-color: #ef4444;
+            background: #fef2f2;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 1.2rem;
+            width: 1.8rem;
+            text-align: center;
+            color: #94a3b8;
+            transition: all 0.2s;
+            pointer-events: none;
+            font-size: 1.2rem;
+        }
+
+        .input-wrapper input:focus+.input-icon {
+            color: #10b981;
+        }
+
+        .input-wrapper input.is-valid+.input-icon {
+            color: #10b981;
+        }
+
+        .input-wrapper input.is-invalid+.input-icon {
+            color: #ef4444;
+        }
+
+        /* hint under field */
+        .otp-hint {
+            font-size: 0.85rem;
+            margin-top: 0.6rem;
+            margin-left: 0.8rem;
+            color: #4b5563;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+            min-height: 1.8rem;
+        }
+
+        .otp-hint.valid-hint {
+            color: #10b981;
+        }
+
+        .otp-hint.invalid-hint {
+            color: #ef4444;
+        }
+
+        /* errorlist (django) */
+        .errorlist {
+            color: #ef4444;
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+            margin-left: 1.2rem;
+            list-style: none;
+            background: rgba(254, 202, 202, 0.2);
+            padding: 0.3rem 1rem;
+            border-radius: 30px;
+            backdrop-filter: blur(2px);
+        }
+
+        .errorlist li {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .errorlist li::before {
+            font-family: "Font Awesome 6 Free";
+            content: "\f06a";
+            font-weight: 900;
+            font-size: 0.7rem;
+        }
+
+        /* submit button */
+        .submit-btn {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(105deg, #10b981, #14b8a6);
+            color: white;
+            border: none;
+            border-radius: 60px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 12px 28px -8px rgba(16, 185, 129, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .submit-btn i {
+            transition: transform 0.2s;
+        }
+
+        .submit-btn:hover:not(:disabled) {
+            background: linear-gradient(105deg, #0f9f72, #119e8e);
+            box-shadow: 0 20px 32px -10px #0b6e55;
+            transform: scale(1.02) translateY(-2px);
+        }
+
+        .submit-btn:hover:not(:disabled) i {
+            transform: translateX(5px);
+        }
+
+        .submit-btn:active:not(:disabled) {
+            transform: scale(0.98);
+            box-shadow: 0 8px 18px -6px #0b6e55;
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            background: #94a3b8;
+            box-shadow: none;
+        }
+
+        .links {
+            margin-top: 2rem;
+            text-align: center;
+        }
+
+        .links p {
+            color: #334155;
+        }
+
+        .links a {
+            color: #10b981;
+            text-decoration: none;
+            font-weight: 600;
+            position: relative;
+            transition: all 0.2s;
+        }
+
+        .links a::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #10b981;
+            transition: width 0.2s;
+        }
+
+        .links a:hover::after {
+            width: 100%;
+        }
+
+        .links a:hover {
+            color: #0b7e5e;
+        }
+
+        .fa-spinner {
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* style for the OTP field specifically */
+        #otp-field {
+            font-family: 'Inter', monospace;
+        }
     </style>
 </head>
+
 <body>
     <div class="container">
-        <h2>Enter Verification Code</h2>
-        <p class="subtitle">We've sent a 6-digit code to {{ request.session.signup_email }}</p>
-        
-        <form method="post">
+        <h2>Enter Code</h2>
+        <!-- subtitle with dynamic email from session -->
+        <p class="subtitle"><i class="fas fa-envelope"></i> We sent a 6‑digit code to<br><strong>{{
+                request.session.signup_email }}</strong></p>
+
+        <!-- messages block (if any) -->
+        {% if messages %}
+        <div class="messages-container">
+            {% for message in messages %}
+            <div class="message-item">
+                <i class="fas fa-circle-check"></i> {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- form – original structure, only enhanced visually -->
+        <form method="post" id="otpForm">
             {% csrf_token %}
             <div class="form-group">
-                {{ form.otp }}
+                <!-- we keep {{ form.otp }} but wrap it for styling -->
+                <label for="{{ form.otp.id_for_label }}">Verification code</label>
+                <div class="input-wrapper">
+                    {{ form.otp }}
+                    <span class="input-icon"><i class="fas fa-key"></i></span>
+                </div>
+                <!-- interactive hint (JS enhanced) -->
+                <div class="otp-hint" id="otpHint">
+                    <i class="fas fa-info-circle"></i> <span>6 digits, e.g. 483291</span>
+                </div>
+
+                <!-- Django errors (exactly as original) -->
                 {% if form.otp.errors %}
                 <ul class="errorlist">
                     {% for error in form.otp.errors %}
@@ -37,12 +397,94 @@
                 </ul>
                 {% endif %}
             </div>
-            <button type="submit">Verify Code</button>
+
+            <button type="submit" class="submit-btn" id="submitBtn">
+                <span>Verify Code</span>
+                <i class="fas fa-arrow-right"></i>
+            </button>
         </form>
-        
+
         <div class="links">
             <p>Didn't receive it? <a href="{% url 'email_signup' %}">Go back and try again</a></p>
         </div>
     </div>
+
+    <!-- interactive JavaScript (only UX, backend untouched) -->
+    <script>
+        (function () {
+            const form = document.getElementById('otpForm');
+            // get the OTP field by ID (dynamic) or fallback
+            const otpField = document.getElementById('{{ form.otp.id_for_label }}') || document.querySelector('input[name="otp"]');
+            const hintDiv = document.getElementById('otpHint');
+            const submitBtn = document.getElementById('submitBtn');
+            const iconSpan = document.querySelector('.input-icon i');
+
+            if (!otpField) {
+                console.warn('OTP field not found — interactive features disabled');
+                return;
+            }
+
+            // validate: exactly 6 digits
+            function isValidOTP(value) {
+                return /^\d{6}$/.test(value);
+            }
+
+            function updateOTPFeedback() {
+                const otp = otpField.value.trim();
+                if (otp === '') {
+                    otpField.classList.remove('is-valid', 'is-invalid');
+                    hintDiv.innerHTML = '<i class="fas fa-info-circle"></i> <span>6 digits, e.g. 483291</span>';
+                    hintDiv.className = 'otp-hint';
+                    if (iconSpan) iconSpan.className = 'fas fa-key';
+                } else if (isValidOTP(otp)) {
+                    otpField.classList.add('is-valid');
+                    otpField.classList.remove('is-invalid');
+                    hintDiv.innerHTML = '<i class="fas fa-check-circle"></i> <span>Valid code</span>';
+                    hintDiv.className = 'otp-hint valid-hint';
+                    if (iconSpan) iconSpan.className = 'fas fa-check-circle';
+                } else {
+                    otpField.classList.add('is-invalid');
+                    otpField.classList.remove('is-valid');
+                    hintDiv.innerHTML = '<i class="fas fa-exclamation-triangle"></i> <span>Must be exactly 6 digits</span>';
+                    hintDiv.className = 'otp-hint invalid-hint';
+                    if (iconSpan) iconSpan.className = 'fas fa-exclamation-circle';
+                }
+            }
+
+            // only allow digits (but doesn't block non-digit, just marks invalid)
+            // we can also filter input to digits only for better UX (optional, doesn't affect backend)
+            otpField.addEventListener('input', function (e) {
+                // optional: strip non-digits but keep length? let's just validate visually.
+                // we'll still call update
+                updateOTPFeedback();
+            });
+
+            otpField.addEventListener('blur', updateOTPFeedback);
+            // initial check
+            updateOTPFeedback();
+
+            // loading state on submit
+            form.addEventListener('submit', function (e) {
+                // let normal submission happen; we just add spinner
+                submitBtn.disabled = true;
+                const originalHTML = submitBtn.innerHTML;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verifying...';
+
+                // fallback: re-enable after 5 seconds if page doesn't reload (e.g., network error)
+                setTimeout(() => {
+                    if (document.body.contains(submitBtn)) {
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = originalHTML;
+                    }
+                }, 5000);
+            });
+
+            // optional: auto-submit when 6 digits entered? not included to keep backend safe.
+            // but you could add a small hint.
+        })();
+    </script>
+
+    <!-- ensure that {{ form.otp }} renders the actual input, with id and name -->
 </body>
+
 </html>

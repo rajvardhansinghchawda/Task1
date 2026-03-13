@@ -1,54 +1,366 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Book Appointment with Dr. {{ doctor.user.name }}</title>
+    <title>Book with Dr. {{ doctor.user.name }} · Hospital HMS</title>
+    <!-- Font & Icons (pure UI, no backend effect) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #f3f4f6; margin: 0; }
-        header { background-color: #1f2937; color: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
-        .main-content { padding: 2rem; max-width: 800px; margin: auto; }
-        .card { background-color: white; padding: 1.5rem; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 2rem; }
-        .btn-secondary { padding: 0.5rem 1rem; border-radius: 4px; background-color: #6b7280; color: white; text-decoration: none; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; }
-        .slot-card { border: 1px solid #d1d5db; border-radius: 8px; padding: 1rem; text-align: center; }
-        .slot-date { font-weight: bold; color: #1f2937; margin-bottom: 0.5rem; }
-        .slot-time { color: #4b5563; margin-bottom: 1rem; }
-        .btn-book { padding: 0.5rem 1rem; background-color: #3b82f6; color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; width: 100%; transition: background-color 0.2s; }
-        .btn-book:hover { background-color: #2563eb; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(145deg, #ebf8ff 0%, #e6f7f0 100%);
+            min-height: 100vh;
+            margin: 0;
+            animation: bgFlow 15s ease infinite alternate;
+        }
+
+        @keyframes bgFlow {
+            0% {
+                background: linear-gradient(145deg, #e2f0fd, #dcf5e8);
+            }
+
+            100% {
+                background: linear-gradient(225deg, #cde8fc, #d0f0e0);
+            }
+        }
+
+        /* header */
+        header {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 8px 20px -8px rgba(16, 185, 129, 0.15);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        header h1 {
+            font-weight: 600;
+            font-size: 1.8rem;
+            background: linear-gradient(135deg, #0b4f3a, #1e8b6e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        header h1 i {
+            color: #10b981;
+            font-size: 2rem;
+            -webkit-text-fill-color: initial;
+        }
+
+        .btn-secondary {
+            padding: 0.6rem 1.4rem;
+            border-radius: 40px;
+            background: rgba(107, 114, 128, 0.8);
+            backdrop-filter: blur(4px);
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            font-size: 0.95rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
+        }
+
+        .btn-secondary:hover {
+            background: #4b5563;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px -8px #4b5563;
+        }
+
+        .btn-secondary i {
+            font-size: 0.9rem;
+        }
+
+        /* main content */
+        .main-content {
+            padding: 2rem;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        /* messages */
+        .messages-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(8px);
+            border-left: 6px solid #3b82f6;
+            border-radius: 24px;
+            padding: 1.2rem 1.8rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 20px -10px rgba(0, 0, 0, 0.1);
+            animation: slideDown 0.3s ease-out;
+        }
+
+        .message-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #1f3a2f;
+            font-weight: 500;
+        }
+
+        .message-item i {
+            color: #3b82f6;
+            font-size: 1.2rem;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* main card */
+        .card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 20px 40px -15px rgba(16, 185, 129, 0.15), 0 0 0 1px rgba(16, 185, 129, 0.05) inset;
+            padding: 2rem;
+            border-radius: 32px;
+            margin-bottom: 2rem;
+            transition: transform 0.3s ease, box-shadow 0.4s ease;
+        }
+
+        .card:hover {
+            box-shadow: 0 25px 45px -15px rgba(16, 185, 129, 0.25), 0 0 0 1px rgba(16, 185, 129, 0.1) inset;
+            transform: translateY(-3px);
+        }
+
+        .card h2 {
+            font-size: 2rem;
+            font-weight: 600;
+            color: #1f3a2f;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .card h2 i {
+            background: #d1fae5;
+            padding: 12px;
+            border-radius: 50%;
+            color: #10b981;
+            font-size: 1.5rem;
+        }
+
+        /* slots grid */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .slot-card {
+            background: white;
+            border: 1px solid rgba(209, 213, 219, 0.4);
+            border-radius: 28px;
+            padding: 1.5rem 1rem;
+            text-align: center;
+            transition: all 0.25s ease;
+            box-shadow: 0 10px 20px -10px rgba(0, 0, 0, 0.05);
+            backdrop-filter: blur(4px);
+        }
+
+        .slot-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 30px -12px rgba(16, 185, 129, 0.3);
+            border-color: #10b981;
+        }
+
+        .slot-date {
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: #1f3a2f;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .slot-date i {
+            color: #10b981;
+            font-size: 1rem;
+        }
+
+        .slot-time {
+            color: #2c5e4a;
+            font-weight: 500;
+            margin-bottom: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            background: #ecfdf5;
+            padding: 0.4rem 0.8rem;
+            border-radius: 40px;
+            width: fit-content;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .slot-time i {
+            color: #10b981;
+        }
+
+        .btn-book {
+            padding: 0.7rem 1.2rem;
+            background: linear-gradient(105deg, #3b82f6, #60a5fa);
+            color: white;
+            border: none;
+            border-radius: 60px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.2s ease;
+            box-shadow: 0 8px 18px -8px #3b82f6;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 0.95rem;
+        }
+
+        .btn-book:hover {
+            background: linear-gradient(105deg, #2563eb, #3b82f6);
+            box-shadow: 0 15px 25px -10px #2563eb;
+            transform: scale(1.02);
+        }
+
+        .btn-book i {
+            font-size: 0.9rem;
+            transition: transform 0.2s;
+        }
+
+        .btn-book:hover i {
+            transform: translateX(4px);
+        }
+
+        /* empty state */
+        .grid p {
+            grid-column: 1 / -1;
+            text-align: center;
+            color: #6b7280;
+            padding: 3rem;
+            background: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(4px);
+            border-radius: 40px;
+            font-size: 1.1rem;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* responsive */
+        @media (max-width: 600px) {
+            .main-content {
+                padding: 1rem;
+            }
+
+            .card h2 {
+                font-size: 1.5rem;
+            }
+        }
     </style>
 </head>
+
 <body>
     <header>
-        <h1>Dr. {{ doctor.user.name }}'s Availability</h1>
-        <a href="{% url 'doctor_list' %}" class="btn-secondary">&larr; Back to Doctors</a>
+        <h1>
+            <i class="fas fa-calendar-check"></i> Dr. {{ doctor.user.name }}'s Availability
+        </h1>
+        <a href="{% url 'doctor_list' %}" class="btn-secondary">
+            <i class="fas fa-arrow-left"></i> Back to Doctors
+        </a>
     </header>
 
-    <div class="main-content">
+    <div class="main-content fade-in">
         {% if messages %}
-            <div class="card" style="border-left: 4px solid #3b82f6;">
-                {% for message in messages %}
-                    <div style="margin-bottom: 0.5rem; color: #1f2937;">{{ message }}</div>
-                {% endfor %}
+        <div class="messages-card">
+            {% for message in messages %}
+            <div class="message-item">
+                <i class="fas fa-circle-info"></i> {{ message }}
             </div>
+            {% endfor %}
+        </div>
         {% endif %}
+
         <div class="card">
-            <h2>Select a Date and Time</h2>
+            <h2>
+                <i class="fas fa-clock"></i> Select a Date and Time
+            </h2>
             <div class="grid">
                 {% for slot in slots %}
                 <div class="slot-card">
-                    <div class="slot-date">{{ slot.date }}</div>
-                    <div class="slot-time">{{ slot.start_time }} - {{ slot.end_time }}</div>
-                    <form action="{% url 'book_appointment' slot.id %}" method="post">
+                    <div class="slot-date">
+                        <i class="far fa-calendar-alt"></i> {{ slot.date }}
+                    </div>
+                    <div class="slot-time">
+                        <i class="far fa-clock"></i> {{ slot.start_time }} - {{ slot.end_time }}
+                    </div>
+                    <form action="{% url 'book_appointment' slot.id %}" method="post" style="display:inline;">
                         {% csrf_token %}
-                        <button type="submit" class="btn-book" onclick="return confirm('Are you sure you want to book this slot?');">Book Now</button>
+                        <button type="submit" class="btn-book"
+                            onclick="return confirm('Are you sure you want to book this slot?');">
+                            Book Now <i class="fas fa-arrow-right"></i>
+                        </button>
                     </form>
                 </div>
                 {% empty %}
-                <p>No available slots found for this doctor.</p>
+                <p>✨ No available slots found for this doctor.</p>
                 {% endfor %}
             </div>
         </div>
     </div>
 </body>
+
 </html>
