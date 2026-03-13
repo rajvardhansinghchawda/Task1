@@ -375,13 +375,10 @@
                 <tbody>
                     {% for apt in appointments %}
                     <tr>
-                        <td><i class="fas fa-user-md" style="color: #10b981; margin-right: 6px;"></i>Dr. {{
-                            apt.doctor.user.name }}</td>
+                        <td><i class="fas fa-user-md" style="color: #10b981; margin-right: 6px;"></i>Dr. {{ apt.doctor.user.name }} {{ apt.doctor.qualification|default:"" }}</td>
                         <td>{{ apt.doctor.specialization }}</td>
-                        <td><i class="far fa-calendar-alt" style="color: #6b7280; margin-right: 6px;"></i>{{
-                            apt.slot.date }}</td>
-                        <td><i class="far fa-clock" style="color: #6b7280; margin-right: 6px;"></i>{{
-                            apt.slot.start_time }} - {{ apt.slot.end_time }}</td>
+                        <td><i class="far fa-calendar-alt" style="color: #6b7280; margin-right: 6px;"></i>{{ apt.slot.date|date:"M d, Y" }}</td>
+                        <td><i class="far fa-clock" style="color: #6b7280; margin-right: 6px;"></i>{{ apt.slot.start_time|time:"h:i A" }} - {{ apt.slot.end_time|time:"h:i A" }}</td>
                         <td><span class="status-badge bg-indigo">{{ apt.get_status_display }}</span></td>
                     </tr>
                     {% empty %}
