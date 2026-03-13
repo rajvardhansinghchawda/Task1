@@ -1,0 +1,26 @@
+# Django
+*.log
+*.pot
+*.pyc
+__pycache__/
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+
+# Secrets & Environment
+.env
+client_secret.json
+
+# Environments
+.venv/
+venv/
+ENV/
+env/
+
+# Media and User Uploads
+media/
+doctor_photos/
+
+# Operating System
+.DS_Store
+Thumbs.db

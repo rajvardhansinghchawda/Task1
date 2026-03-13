@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Profile Setup - Hospital HMS</title>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f3f4f6; display: flex; justify-content: center; align-items: flex-start; min-height: 100vh; margin: 0; padding: 2rem 0;}
+        .container { background-color: white; padding: 2.5rem; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); width: 100%; max-width: 600px; }
+        h2 { text-align: center; color: #1f2937; margin-bottom: 0.5rem; }
+        p.subtitle { text-align: center; color: #6b7280; font-size: 0.875rem; margin-bottom: 2rem; }
+        
+        .section-title { 
+            font-weight: 600; 
+            color: #374151; 
+            font-size: 1rem; 
+            margin-top: 1.5rem; 
+            margin-bottom: 0.75rem; 
+            padding-bottom: 0.5rem; 
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .section-title:first-of-type { margin-top: 0; }
+        
+        .form-group { margin-bottom: 1rem; }
+        .form-group label { display: block; margin-bottom: 0.35rem; color: #4b5563; font-weight: 500; font-size: 0.875rem;}
+        .form-group input, .form-group select, .form-group textarea { 
+            width: 100%; padding: 0.65rem; border: 1px solid #d1d5db; border-radius: 4px; box-sizing: border-box; 
+            font-family: inherit; font-size: 0.875rem; transition: border-color 0.2s;
+        }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { 
+            outline: none; border-color: #10b981; box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1); 
+        }
+        .form-group textarea { min-height: 80px; resize: vertical; }
+        
+        .form-row { display: flex; gap: 1rem; }
+        .form-row .form-group { flex: 1; }
+        
+        button { width: 100%; padding: 0.875rem; background-color: #10b981; color: white; border: none; border-radius: 6px; font-weight: bold; font-size: 1rem; cursor: pointer; transition: background-color 0.2s; margin-top: 1.5rem;}
+        button:hover { background-color: #059669; }
+        .errorlist { color: #ef4444; font-size: 0.8rem; padding-left: 1rem; margin-top: 0.25rem; margin-bottom: 0;}
+        .helptext { font-size: 0.75rem; color: #9ca3af; margin-top: 0.2rem;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Set Up Your Doctor Profile</h2>
+        <p class="subtitle">Complete the form below to start accepting appointments</p>
+        
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <div class="section-title">📷 Basic Information</div>
+            
+            <div class="form-group">
+                <label for="{{ form.profile_photo.id_for_label }}">Profile Photo</label>
+                {{ form.profile_photo }}
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="{{ form.phone_number.id_for_label }}">Phone Number</label>
+                    {{ form.phone_number }}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.gender.id_for_label }}">Gender</label>
+                    {{ form.gender }}
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="{{ form.date_of_birth.id_for_label }}">Date of Birth</label>
+                {{ form.date_of_birth }}
+            </div>
+            
+            <div class="section-title">⚕️ Professional Information</div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="{{ form.specialization.id_for_label }}">Specialization *</label>
+                    {{ form.specialization }}
+                    {% if form.specialization.errors %}<ul class="errorlist">{% for e in form.specialization.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.qualification.id_for_label }}">Qualification</label>
+                    {{ form.qualification }}
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="{{ form.experience.id_for_label }}">Experience (years)</label>
+                    {{ form.experience }}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.license_number.id_for_label }}">License Number</label>
+                    {{ form.license_number }}
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="{{ form.hospital_name.id_for_label }}">Hospital Name *</label>
+                {{ form.hospital_name }}
+                {% if form.hospital_name.errors %}<ul class="errorlist">{% for e in form.hospital_name.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+            </div>
+            
+            <div class="section-title">📝 Additional Information</div>
+            
+            <div class="form-group">
+                <label for="{{ form.about.id_for_label }}">About / Bio</label>
+                {{ form.about }}
+            </div>
+            
+            <div class="form-group">
+                <label for="{{ form.consultation_fee.id_for_label }}">Consultation Fee (₹)</label>
+                {{ form.consultation_fee }}
+            </div>
+            
+            <div class="section-title">🕐 Availability</div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="{{ form.available_from.id_for_label }}">Available From</label>
+                    {{ form.available_from }}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.available_to.id_for_label }}">Available To</label>
+                    {{ form.available_to }}
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="{{ form.default_slot_duration.id_for_label }}">Default Slot Duration (minutes)</label>
+                {{ form.default_slot_duration }}
+                <p class="helptext">e.g. 15 minutes per appointment slot</p>
+            </div>
+            
+            <button type="submit">Complete Profile & Continue</button>
+        </form>
+    </div>
+</body>
+</html>

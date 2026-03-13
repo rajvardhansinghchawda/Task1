@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Registration - Hospital HMS</title>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f3f4f6; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 2rem 0;}
+        .container { background-color: white; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); width: 100%; max-width: 450px; }
+        h2 { text-align: center; color: #1f2937; margin-bottom: 0.5rem; }
+        p.subtitle { text-align: center; color: #6b7280; font-size: 0.875rem; margin-bottom: 2rem; }
+        .form-group { margin-bottom: 1.25rem; }
+        .form-group label { display: block; margin-bottom: 0.5rem; color: #4b5563; font-weight: 500;}
+        .form-group input { width: 100%; padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 4px; box-sizing: border-box; transition: border-color 0.2s;}
+        .form-group input:focus { outline: none; border-color: #10b981; box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1); }
+        button { width: 100%; padding: 0.875rem; background-color: #10b981; color: white; border: none; border-radius: 6px; font-weight: bold; font-size: 1rem; cursor: pointer; transition: background-color 0.2s; margin-top: 1rem;}
+        button:hover { background-color: #059669; }
+        .errorlist { color: #ef4444; font-size: 0.875rem; padding-left: 1rem; margin-top: 0.25rem; margin-bottom: 0;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Complete Your Patient Profile</h2>
+        <p class="subtitle">Please provide additional details to finish registration</p>
+        
+        <form method="post">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label for="{{ form.phone_number.id_for_label }}">Phone Number</label>
+                {{ form.phone_number }}
+                {% if form.phone_number.errors %}
+                <ul class="errorlist">
+                    {% for error in form.phone_number.errors %}
+                    <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.aadhar_number.id_for_label }}">Aadhar Number (12 digits)</label>
+                {{ form.aadhar_number }}
+                {% if form.aadhar_number.errors %}
+                <ul class="errorlist">
+                    {% for error in form.aadhar_number.errors %}
+                    <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
+            
+            <button type="submit">Complete Setup</button>
+        </form>
+    </div>
+</body>
+</html>

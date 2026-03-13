@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Role - Hospital HMS</title>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f3f4f6; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 2rem 0;}
+        .container { background-color: white; padding: 2.5rem; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); width: 100%; max-width: 450px; }
+        h2 { text-align: center; color: #1f2937; margin-bottom: 0.5rem; }
+        p.subtitle { text-align: center; color: #6b7280; font-size: 0.875rem; margin-bottom: 2rem; }
+        
+        .role-options { display: flex; gap: 1rem; margin-bottom: 2rem; justify-content: center;}
+        
+        .role-card {
+            flex: 1;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 1.5rem 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+        
+        .role-card:hover {
+            border-color: #10b981;
+            background-color: #f0fdf4;
+        }
+        
+        .role-card input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+            height: 0;
+            width: 0;
+        }
+        
+        /* Add a selected state styling */
+        .role-card input[type="radio"]:checked + .role-content {
+            color: #10b981;
+        }
+        
+        .role-card.selected {
+            border-color: #10b981;
+            background-color: #ecfdf5;
+            box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+        }
+        
+        .role-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+        
+        .role-title {
+            font-weight: bold;
+            color: #374151;
+            font-size: 1.1rem;
+        }
+        
+        button { width: 100%; padding: 0.875rem; background-color: #1f2937; color: white; border: none; border-radius: 6px; font-weight: bold; font-size: 1rem; cursor: pointer; transition: background-color 0.2s; }
+        button:hover { background-color: #111827; }
+        button:disabled { background-color: #9ca3af; cursor: not-allowed; }
+        
+        .errorlist { color: #ef4444; font-size: 0.875rem; text-align: center; list-style: none; padding: 0;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2 style="margin-bottom: 2rem;">Complete Your Profile</h2>
+        
+        <form method="post" id="roleForm">
+            {% csrf_token %}
+            
+            <div class="form-group" style="margin-bottom: 2rem;">
+                <label for="{{ form.name.id_for_label }}" style="display: block; margin-bottom: 0.5rem; color: #4b5563; font-weight: bold; text-align: left;">Full Name</label>
+                <input type="text" name="{{ form.name.name }}" id="{{ form.name.id_for_label }}" 
+                       value="{{ form.name.value|default:'' }}" 
+                       placeholder="Enter your full name"
+                       style="width: 100%; padding: 0.875rem; border: 2px solid #e5e7eb; border-radius: 8px; box-sizing: border-box; font-size: 1rem; transition: border-color 0.2s;"
+                       required>
+                {% if form.name.errors %}
+                <ul class="errorlist" style="margin-top: 0.5rem;">
+                    {% for error in form.name.errors %}
+                    <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
+
+            <p class="subtitle" style="text-align: left; font-weight: bold; color: #4b5563; margin-bottom: 1rem;">Select your role</p>
+            
+            {% if form.role.errors %}
+            <ul class="errorlist">
+                {% for error in form.role.errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+            
+            <div class="role-options">
+                <label class="role-card" id="card_doctor">
+                    <input type="radio" name="{{ form.role.name }}" value="DOCTOR" onchange="selectRole('card_doctor')">
+                    <div class="role-content">
+                        <span class="role-icon">⚕️</span>
+                        <span class="role-title">Doctor</span>
+                    </div>
+                </label>
+                
+                <label class="role-card" id="card_patient">
+                    <input type="radio" name="{{ form.role.name }}" value="PATIENT" onchange="selectRole('card_patient')">
+                    <div class="role-content">
+                        <span class="role-icon">🧑‍⚕️</span>
+                        <span class="role-title">Patient</span>
+                    </div>
+                </label>
+            </div>
+            
+            <button type="submit" id="submitBtn" disabled>Continue</button>
+        </form>
+    </div>
+    
+    <script>
+        function selectRole(selectedId) {
+            document.querySelectorAll('.role-card').forEach(card => card.classList.remove('selected'));
+            document.getElementById(selectedId).classList.add('selected');
+            document.getElementById('submitBtn').disabled = false;
+        }
+    </script>
+</body>
+</html>

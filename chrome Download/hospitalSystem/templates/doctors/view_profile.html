@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dr. {{ doctor.user.name }} - Profile</title>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f3f4f6; margin: 0; }
+        header { background-color: #1f2937; color: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+        .main-content { padding: 2rem; max-width: 800px; margin: auto; }
+        .card { background-color: white; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); margin-bottom: 2rem; }
+        .profile-header { display: flex; align-items: center; margin-bottom: 2rem; gap: 2rem;}
+        .profile-photo { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; background-color: #e5e7eb; display: flex; align-items: center; justify-content: center; color: #9ca3af; font-size: 3rem;}
+        .profile-info h2 { margin: 0 0 0.5rem 0; color: #1f2937; }
+        .profile-info p { margin: 0; color: #4b5563; font-size: 1.1rem;}
+        .btn { padding: 0.5rem 1rem; border-radius: 4px; border: none; font-weight: bold; cursor: pointer; text-decoration: none; display: inline-block; }
+        .btn-primary { background-color: #3b82f6; color: white; }
+        .btn-secondary { background-color: #6b7280; color: white; }
+        .section-title { font-size: 1.25rem; color: #1f2937; border-bottom: 2px solid #e5e7eb; padding-bottom: 0.5rem; margin-top: 1.5rem; margin-bottom: 1rem; }
+        .detail-row { display: flex; margin-bottom: 0.5rem; }
+        .detail-label { width: 150px; font-weight: bold; color: #4b5563; }
+        .detail-value { color: #1f2937; flex: 1; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Profile Overview</h1>
+        <div>
+            <a href="{% url 'doctor_dashboard' %}" class="btn btn-secondary">Dashboard</a>
+            <a href="{% url 'edit_profile' %}" class="btn btn-primary">Edit Profile</a>
+        </div>
+    </header>
+
+    <div class="main-content">
+        {% if messages %}
+            <ul style="color: #065f46; background-color: #d1fae5; padding: 1rem; border-radius: 4px; list-style-type: none; text-align: center;">
+                {% for message in messages %}<li>{{ message }}</li>{% endfor %}
+            </ul>
+        {% endif %}
+
+        <div class="card">
+            <div class="profile-header">
+                {% if doctor.profile_photo %}
+                    <img src="{{ doctor.profile_photo.url }}" alt="Dr. {{ doctor.user.name }}" class="profile-photo">
+                {% else %}
+                    <div class="profile-photo">👤</div>
+                {% endif %}
+                <div class="profile-info">
+                    <h2>Dr. {{ doctor.user.name }}</h2>
+                    <p>{{ doctor.specialization }}</p>
+                    <p>{{ doctor.hospital_name }}</p>
+                </div>
+            </div>
+
+            <div class="section-title">Professional Information</div>
+            <div class="detail-row"><div class="detail-label">Experience:</div><div class="detail-value">{{ doctor.experience }} Years</div></div>
+            <div class="detail-row"><div class="detail-label">Qualification:</div><div class="detail-value">{{ doctor.qualification|default:"Not specified" }}</div></div>
+            <div class="detail-row"><div class="detail-label">License No:</div><div class="detail-value">{{ doctor.license_number|default:"Not specified" }}</div></div>
+            <div class="detail-row"><div class="detail-label">Consultation Fee:</div><div class="detail-value">${{ doctor.consultation_fee }}</div></div>
+
+            <div class="section-title">Basic Information</div>
+            <div class="detail-row"><div class="detail-label">Email:</div><div class="detail-value">{{ doctor.user.email }}</div></div>
+            <div class="detail-row"><div class="detail-label">Phone:</div><div class="detail-value">{{ doctor.phone_number|default:"Not specified" }}</div></div>
+            <div class="detail-row"><div class="detail-label">Gender:</div><div class="detail-value">{{ doctor.get_gender_display|default:"Not specified" }}</div></div>
+            <div class="detail-row"><div class="detail-label">Date of Birth:</div><div class="detail-value">{{ doctor.date_of_birth|default:"Not specified" }}</div></div>
+
+            <div class="section-title">About</div>
+            <p style="color: #4b5563; line-height: 1.6;">{{ doctor.about|default:"No description provided yet." }}</p>
+        </div>
+    </div>
+</body>
+</html>
