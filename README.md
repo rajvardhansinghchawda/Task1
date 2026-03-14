@@ -122,3 +122,60 @@ python manage.py runserver
 - **Strict Gitignore**: Secrets like `.env` and `client_secret.json` are excluded from version control.
 - **Environment Variables**: Managed via `python-dotenv`.
 - **Transaction Safety**: Uses `select_for_update()` to handle concurrent booking requests.
+
+
+## 🎥 Video Demonstration
+
+A complete walkthrough of the **Mini Hospital Management System (HMS)** is available in the video below. The video explains the architecture, booking workflow, email notification system, and Google Calendar integration used in the project.
+
+📂 **Google Drive Video Explanation:**
+
+
+(https://drive.google.com/file/d/1RrNCN_5Mn6lY9XW1qyA9wO97SyXL67AO/view?usp=drive_link)
+
+If the video preview does not load on GitHub, you can download or watch it directly from the Google Drive link above.
+
+---
+
+## 📺 What the Demo Covers
+
+The demonstration video shows the following features of the system:
+
+### 1. User Authentication
+
+* Email signup with OTP verification
+* Secure login system
+* Google OAuth login using django-allauth
+
+### 2. Doctor Dashboard
+
+* Manage available consultation slots
+* View upcoming patient appointments
+* Calendar synchronization
+
+### 3. Patient Dashboard
+
+* Discover available doctors
+* Book appointments based on available slots
+* View appointment history
+
+### 4. Smart Booking Engine
+
+* Prevents double booking
+* Uses transactional database operations to avoid race conditions
+
+### 5. Google Calendar Integration
+
+* Automatically creates events in both Doctor and Patient calendars after booking
+
+### 6. Email Notification System
+
+* OTP verification email
+* Welcome email for new users
+* Appointment confirmation email to patients
+* New appointment alerts to doctors
+
+---
+
+This video provides a complete overview of how the system works and demonstrates the main features implemented in the project.
+
